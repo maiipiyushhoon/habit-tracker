@@ -14,7 +14,7 @@ It's a habit tracker for daily habits
   A lightweight, offline-capable mobile web application that digitizes my physical <b>31-Day Habit & Sleep Tracker</b> into an interactive analytics dashboard with real-time SVG charts, a 31-day matrix grid, and persistent local storage.
 </p>
 
-[🔗 **Launch Live Dashboard**](https://maiipiyushhoon.github.io/habit-tracker/) · [📲 **Install on Phone**](#-install-as-a-mobile-app-pwa) · [📓 **Embed in Notion**](#-embed-inside-notion-mobile)
+[🔗 **Launch Live Dashboard**] · [📲 **Install on Phone**](#-install-as-a-mobile-app-pwa) · [📓 **Embed in Notion**](#-embed-inside-notion-mobile)
 
 </div>
 
