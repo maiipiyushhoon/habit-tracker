@@ -8,222 +8,34 @@
   <title>Oct 2026 — 31 Day Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    :root {
-      color-scheme: dark;
-    }
+    :root { color-scheme: dark; }
     body {
-      background-color: #0b0f17;
+      background-color: #090d16;
       color: #f1f5f9;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       -webkit-tap-highlight-color: transparent;
       overscroll-behavior-y: none;
     }
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-    .no-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     .sticky-col {
       position: sticky;
       left: 0;
       z-index: 20;
-      background-color: #111827;
-      box-shadow: 2px 0 8px rgba(0, 0, 0, 0.45);
+      background-color: #0f172a;
+      box-shadow: 3px 0 10px rgba(0, 0, 0, 0.5);
     }
     .glass-nav {
-      background: rgba(15, 23, 42, 0.9);
+      background: rgba(15, 23, 42, 0.92);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
     }
   </style>
-</head>
-<body class="min-h-screen pb-24 select-none">
 
-  <!-- TOP APP BAR -->
-  <header class="sticky top-0 z-30 glass-nav border-b border-slate-800/80 px-4 py-3">
-    <div class="max-w-md mx-auto flex items-center justify-between">
-      <div>
-        <div class="flex items-center gap-2">
-          <span class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-400 rounded-full border border-emerald-500/30">Oct 2026</span>
-          <span class="text-xs text-slate-400">31 Day Dashboard</span>
-        </div>
-        <h1 class="text-base font-bold tracking-tight text-white mt-0.5">Getting 1% Better Each Day</h1>
-      </div>
-      <button onclick="resetToPaperSheet()" class="text-[11px] font-medium px-2.5 py-1.5 rounded-lg bg-slate-800 text-slate-300 border border-slate-700 active:scale-95 transition">
-        Reset Data
-      </button>
-    </div>
-  </header>
-
-  <!-- MAIN CONTAINER -->
-  <main class="max-w-md mx-auto px-3 pt-3 space-y-4">
-
-    <!-- KPI SUMMARY STRIP -->
-    <section class="grid grid-cols-3 gap-2">
-      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-2.5 text-center">
-        <p class="text-[10px] uppercase tracking-wider text-slate-400">Selected Day</p>
-        <p id="kpiDayScore" class="text-lg font-extrabold text-emerald-400 mt-0.5">7 / 12</p>
-        <p id="kpiDayLabel" class="text-[10px] text-slate-500">Day 1 Points</p>
-      </div>
-      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-2.5 text-center">
-        <p class="text-[10px] uppercase tracking-wider text-slate-400">Day Sleep</p>
-        <p id="kpiDaySleep" class="text-lg font-extrabold text-sky-400 mt-0.5">6 hrs</p>
-        <p id="kpiAvgSleep" class="text-[10px] text-slate-500">Avg: 6.5 hrs</p>
-      </div>
-      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-2.5 text-center">
-        <p class="text-[10px] uppercase tracking-wider text-slate-400">Month Total</p>
-        <p id="kpiMonthPts" class="text-lg font-extrabold text-amber-400 mt-0.5">51 pts</p>
-        <p id="kpiTopHabit" class="text-[10px] text-slate-500 truncate">Top: music</p>
-      </div>
-    </section>
-
-    <!-- TAB 1: DAILY MOBILE LOGGER -->
-    <section id="tab-daily" class="space-y-3">
-      <!-- 31-Day Horizontal Pill Selector -->
-      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-2.5">
-        <div class="flex items-center justify-between mb-2">
-          <span class="text-xs font-semibold text-slate-300">Select Day (Oct 1 – 31)</span>
-          <span id="selectedDayBadge" class="text-xs font-bold text-emerald-400">Day 1</span>
-        </div>
-        <div id="daySelectorStrip" class="flex gap-1.5 overflow-x-auto no-scrollbar py-1"></div>
-      </div>
-
-      <!-- Sleep Logger Card for Selected Day -->
-      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3">
-        <div class="flex items-center justify-between mb-2">
-          <div>
-            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-300">💤 Sleep Hours (Paper Scale)</h2>
-            <p class="text-[11px] text-slate-400">Tap to log sleep for <span class="dayNameSpan font-semibold text-white">Day 1</span></p>
-          </div>
-          <span id="currentSleepBadge" class="text-xs font-bold px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-500/30">6 hrs</span>
-        </div>
-        <div id="sleepButtonsRow" class="grid grid-cols-6 gap-1.5"></div>
-      </div>
-
-      <!-- 12 Habits Checklist Card -->
-      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3">
-        <div class="flex items-center justify-between mb-2.5">
-          <div>
-            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-300">📋 Habits / Rules (12)</h2>
-            <p class="text-[11px] text-slate-400">Tap <span class="text-emerald-400 font-bold">✓</span> (Done) or <span class="text-rose-400 font-bold">✗</span> (Missed)</p>
-          </div>
-          <div class="text-right">
-            <span id="dailyProgressText" class="text-xs font-bold text-emerald-400">58%</span>
-          </div>
-        </div>
-        <!-- Progress bar -->
-        <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden mb-3">
-          <div id="dailyProgressBar" class="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-300" style="width: 58%"></div>
-        </div>
-
-        <div id="habitChecklistContainer" class="space-y-2"></div>
-      </div>
-
-      <!-- Note Box (From bottom of paper sheet) -->
-      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3">
-        <label for="monthlyNoteInput" class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">📝 Sheet Note</label>
-        <textarea id="monthlyNoteInput" rows="2" placeholder="Add notes for Oct 2026..." class="w-full rounded-lg bg-slate-950 border border-slate-800 p-2 text-xs text-slate-200 focus:outline-none focus:border-emerald-500"></textarea>
-      </div>
-    </section>
-
-    <!-- TAB 2: 31-DAY PAPER SHEET MATRIX -->
-    <section id="tab-matrix" class="hidden space-y-3">
-      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3">
-        <div class="flex items-center justify-between mb-2">
-          <div>
-            <h2 class="text-xs font-bold uppercase tracking-wider text-white">🗓️ 31-Day Paper Sheet Grid</h2>
-            <p class="text-[11px] text-slate-400">Swipe sideways • Tap any cell to cycle <span class="text-emerald-400 font-bold">✓</span> → <span class="text-rose-400 font-bold">✗</span> → blank</p>
-          </div>
-        </div>
-        <div class="overflow-x-auto border border-slate-800 rounded-lg">
-          <table class="text-xs border-collapse w-max">
-            <thead id="matrixThead" class="bg-slate-950 text-slate-400"></thead>
-            <tbody id="matrixTbody" class="divide-y divide-slate-800/80"></tbody>
-            <tfoot id="matrixTfoot" class="bg-slate-950 font-bold border-t-2 border-slate-700"></tfoot>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 3: SLEEP CHART (EXACT PAPER REPLICA) -->
-    <section id="tab-sleep" class="hidden space-y-3">
-      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3">
-        <div class="flex items-center justify-between mb-2">
-          <div>
-            <h2 class="text-xs font-bold uppercase tracking-wider text-white">📈 Sleep Connected Line Graph</h2>
-            <p class="text-[11px] text-slate-400">Matches your sheet scale (<span class="text-rose-400 font-semibold">0 hr</span> at top, <span class="text-sky-400 font-semibold">9 hrs → 5 hrs</span>)</p>
-          </div>
-        </div>
-        <!-- Scrollable SVG + Interactive Dot Grid -->
-        <div class="overflow-x-auto border border-slate-800 rounded-lg bg-slate-950 p-2">
-          <div id="sleepSvgWrapper" class="min-w-[820px]"></div>
-        </div>
-        <p class="text-[11px] text-slate-400 mt-2">💡 <strong>Tip:</strong> Tap any circle in the grid below to update that day's sleep hours and redraw the curve immediately.</p>
-      </div>
-
-      <!-- Interactive Sleep Matrix Table -->
-      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3">
-        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Tap Grid to Plot Sleep Dot (Days 1–31)</h3>
-        <div class="overflow-x-auto border border-slate-800 rounded-lg">
-          <table class="text-xs border-collapse w-max">
-            <thead id="sleepGridHead" class="bg-slate-950 text-slate-400"></thead>
-            <tbody id="sleepGridBody" class="divide-y divide-slate-800/80"></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 4: EVALUATION & ANALYTICS CHARTS -->
-    <section id="tab-eval" class="hidden space-y-3">
-      <!-- Daily Total Points Bar + Line Chart -->
-      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3">
-        <h2 class="text-xs font-bold uppercase tracking-wider text-white mb-1">📊 Daily Total Points (Out of 12)</h2>
-        <p class="text-[11px] text-slate-400 mb-3">Visual evaluation of your Total Points row across all 31 days</p>
-        <div class="overflow-x-auto border border-slate-800 rounded-lg bg-slate-950 p-2">
-          <div id="pointsChartSvg" class="min-w-[780px]"></div>
-        </div>
-      </div>
-
-      <!-- Habit Consistency Ranking -->
-      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3">
-        <div class="flex items-center justify-between mb-2">
-          <h2 class="text-xs font-bold uppercase tracking-wider text-white">🏆 Habit Consistency Breakdown</h2>
-          <span class="text-[11px] text-slate-400">Checkmarks vs Missed</span>
-        </div>
-        <div id="habitEvalBars" class="space-y-2.5"></div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- BOTTOM MOBILE NAVIGATION BAR -->
-  <nav class="fixed bottom-0 left-0 right-0 z-40 glass-nav border-t border-slate-800">
-    <div class="max-w-md mx-auto grid grid-cols-4 py-1.5 px-2">
-      <button onclick="switchTab('daily')" id="nav-daily" class="flex flex-col items-center py-1 text-emerald-400">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        <span class="text-[10px] font-semibold mt-0.5">Daily Log</span>
-      </button>
-      <button onclick="switchTab('matrix')" id="nav-matrix" class="flex flex-col items-center py-1 text-slate-400">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
-        <span class="text-[10px] font-semibold mt-0.5">31-Day Grid</span>
-      </button>
-      <button onclick="switchTab('sleep')" id="nav-sleep" class="flex flex-col items-center py-1 text-slate-400">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
-        <span class="text-[10px] font-semibold mt-0.5">Sleep Chart</span>
-      </button>
-      <button onclick="switchTab('eval')" id="nav-eval" class="flex flex-col items-center py-1 text-slate-400">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-        <span class="text-[10px] font-semibold mt-0.5">Evaluation</span>
-      </button>
-    </div>
-  </nav>
-
+  <!-- SCRIPT PLACED IN HEAD SO MOBILE PASTE TRUNCATION NEVER BREAKS INTERACTIVITY -->
   <script>
-    const STORAGE_KEY = "oct_2026_habit_dashboard_v1";
+    const STORAGE_KEY = "oct_2026_habit_dashboard_v2";
 
-    // Exact 12 Habits from Paper Sheet
     const HABITS = [
       { id: 1, name: "6:00" },
       { id: 2, name: "workout/stretch" },
@@ -239,7 +51,6 @@
       { id: 12, name: "walk" }
     ];
 
-    // Exact Sleep Scale Order on Paper Sheet (Top to Bottom)
     const SLEEP_ROWS = [
       { val: 0, label: "0 hr" },
       { val: 9, label: "9 hrs" },
@@ -249,195 +60,195 @@
       { val: 5, label: "5 hrs" }
     ];
 
-    // Exact Initial Data from Oct 2026 Paper Tracker (1 = ✓, -1 = ✗, 0 = blank)
     function getInitialPaperData() {
       const logs = {};
       for (let h = 1; h <= 12; h++) {
         logs[h] = {};
         for (let d = 1; d <= 31; d++) logs[h][d] = 0;
       }
-
-      const setRow = (habitId, entries) => {
-        Object.entries(entries).forEach(([day, val]) => {
-          logs[habitId][Number(day)] = val;
-        });
+      const setRow = (hId, entries) => {
+        Object.entries(entries).forEach(([d, val]) => { logs[hId][Number(d)] = val; });
       };
 
-      // 1. 6:00
-      setRow(1, { 1:-1, 2:1, 3:1, 4:-1, 5:-1, 6:-1, 7:-1, 8:-1, 9:-1, 10:-1, 11:-1, 12:-1 });
-      // 2. workout/stretch
-      setRow(2, { 1:-1, 2:-1, 3:-1, 4:1, 12:-1, 13:1 });
-      // 3. 3 hr Deep Work
-      setRow(3, { 1:-1, 2:1, 3:-1, 4:1, 12:-1 });
-      // 4. Soft skills
-      setRow(4, { 1:1, 2:1, 3:1, 4:-1, 12:-1 });
-      // 5. meditate
-      setRow(5, { 1:1, 2:-1, 3:-1, 4:1, 12:-1 });
-      // 6. 3/4 L water
-      setRow(6, { 1:1, 2:1, 3:1, 4:1, 12:1 });
-      // 7. one topic
-      setRow(7, { 1:-1, 2:1, 3:1, 4:-1, 12:1 });
-      // 8. journal
-      setRow(8, { 1:1, 2:-1, 3:-1, 4:-1, 12:-1 });
-      // 9. read
-      setRow(9, { 1:-1, 2:1, 3:1, 4:1, 12:1 });
-      // 10. feynman
+      setRow(1,  { 1:-1, 2:1, 3:1, 4:-1, 5:-1, 6:-1, 7:-1, 8:-1, 9:-1, 10:-1, 11:-1, 12:-1 });
+      setRow(2,  { 1:-1, 2:-1, 3:-1, 4:1, 12:-1, 13:1 });
+      setRow(3,  { 1:-1, 2:1, 3:-1, 4:1, 12:-1 });
+      setRow(4,  { 1:1, 2:1, 3:1, 4:-1, 12:-1 });
+      setRow(5,  { 1:1, 2:-1, 3:-1, 4:1, 12:-1 });
+      setRow(6,  { 1:1, 2:1, 3:1, 4:1, 12:1 });
+      setRow(7,  { 1:-1, 2:1, 3:1, 4:-1, 12:1 });
+      setRow(8,  { 1:1, 2:-1, 3:-1, 4:-1, 12:-1 });
+      setRow(9,  { 1:-1, 2:1, 3:1, 4:1, 12:1 });
       setRow(10, { 1:1, 2:1, 3:-1, 4:1, 12:-1, 13:1 });
-      // 11. music
       setRow(11, { 1:1, 2:1, 3:1, 4:1, 5:1, 6:1, 7:1, 8:1, 9:1, 10:1, 11:1, 12:1 });
-      // 12. walk
       setRow(12, { 1:1, 2:1, 3:1, 4:1, 5:1, 6:1, 7:1, 8:1, 9:1, 10:1, 11:-1, 12:1 });
 
       const sleep = {
         1: 6, 2: 7, 3: 8, 4: 7, 5: 5, 6: 6, 7: 5,
         8: 7, 9: 8, 10: 8, 11: 9, 12: 8, 13: 0
       };
-
       return { logs, sleep, note: "" };
     }
 
-    let state = loadState();
-    let selectedDay = 13;
+    let state = getInitialPaperData();
+    let selectedDay = 2;
 
     function loadState() {
       try {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) return JSON.parse(saved);
-      } catch (e) {}
-      return getInitialPaperData();
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) state = JSON.parse(raw);
+      } catch (e) {
+        state = getInitialPaperData();
+      }
     }
 
     function saveState() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
       renderAll();
     }
 
-    function resetToPaperSheet() {
+    window.resetToPaperSheet = function() {
       if (confirm("Reset all 31 days back to your original Oct 2026 paper sheet logs?")) {
         state = getInitialPaperData();
-        selectedDay = 13;
+        selectedDay = 2;
         saveState();
       }
-    }
+    };
 
     function getDayPoints(day) {
       let pts = 0;
       for (let h = 1; h <= 12; h++) {
-        if (state.logs[h][day] === 1) pts++;
+        if (state.logs[h] && state.logs[h][day] === 1) pts++;
       }
       return pts;
     }
 
-    // Switch Tabs
-    function switchTab(tab) {
+    window.switchTab = function(tab) {
       ["daily", "matrix", "sleep", "eval"].forEach(t => {
-        document.getElementById(`tab-${t}`).classList.toggle("hidden", t !== tab);
-        const navBtn = document.getElementById(`nav-${t}`);
-        if (t === tab) {
-          navBtn.classList.remove("text-slate-400");
-          navBtn.classList.add("text-emerald-400");
-        } else {
-          navBtn.classList.remove("text-emerald-400");
-          navBtn.classList.add("text-slate-400");
+        const sec = document.getElementById("tab-" + t);
+        const nav = document.getElementById("nav-" + t);
+        if (sec) sec.classList.toggle("hidden", t !== tab);
+        if (nav) {
+          nav.className = t === tab
+            ? "flex flex-col items-center py-1 text-emerald-400 font-bold"
+            : "flex flex-col items-center py-1 text-slate-400";
         }
       });
       renderAll();
-    }
+    };
 
-    // Set Habit status for a day
-    function setHabitStatus(habitId, day, status) {
-      state.logs[habitId][day] = state.logs[habitId][day] === status ? 0 : status;
-      saveState();
-    }
-
-    // Cycle Habit status in 31-day grid (0 -> 1 -> -1 -> 0)
-    function cycleHabitCell(habitId, day) {
-      const curr = state.logs[habitId][day];
-      const next = curr === 0 ? 1 : (curr === 1 ? -1 : 0);
-      state.logs[habitId][day] = next;
-      selectedDay = day;
-      saveState();
-    }
-
-    // Set Sleep for a day
-    function setSleep(day, hours) {
-      if (state.sleep[day] === hours) {
-        delete state.sleep[day];
-      } else {
-        state.sleep[day] = hours;
-      }
-      selectedDay = day;
-      saveState();
-    }
-
-    function selectDay(day) {
+    window.selectDay = function(day) {
       selectedDay = day;
       renderAll();
-    }
+    };
 
-    // Render KPI Header
-    function renderKPIs() {
+    window.setHabitStatus = function(hId, day, status) {
+      state.logs[hId][day] = state.logs[hId][day] === status ? 0 : status;
+      saveState();
+    };
+
+    window.cycleHabitCell = function(hId, day) {
+      const c = state.logs[hId][day];
+      state.logs[hId][day] = c === 0 ? 1 : (c === 1 ? -1 : 0);
+      selectedDay = day;
+      saveState();
+    };
+
+    window.setSleep = function(day, hrs) {
+      if (state.sleep[day] === hrs) delete state.sleep[day];
+      else state.sleep[day] = hrs;
+      selectedDay = day;
+      saveState();
+    };
+
+    function renderKPIsAndMiniCharts() {
       const pts = getDayPoints(selectedDay);
+      const pct = Math.round((pts / 12) * 100);
       document.getElementById("kpiDayScore").textContent = `${pts} / 12`;
-      document.getElementById("kpiDayLabel").textContent = `Day ${selectedDay} Points`;
+      document.getElementById("kpiDayLabel").textContent = `Day ${selectedDay} (${pct}%)`;
+
+      // Update SVG Ring Gauge
+      const ring = document.getElementById("kpiRingCircle");
+      if (ring) {
+        const circum = 2 * Math.PI * 18;
+        ring.style.strokeDasharray = `${circum}`;
+        ring.style.strokeDashoffset = `${circum - (pct / 100) * circum}`;
+      }
 
       const s = state.sleep[selectedDay];
-      document.getElementById("kpiDaySleep").textContent = s !== undefined ? `${s} hr${s === 1 ? "" : "s"}` : "—";
+      document.getElementById("kpiDaySleep").textContent = s !== undefined ? `${s} hrs` : "—";
 
       const sleepVals = Object.values(state.sleep);
       const avgSleep = sleepVals.length ? (sleepVals.reduce((a, b) => a + b, 0) / sleepVals.length).toFixed(1) : "0.0";
-      document.getElementById("kpiAvgSleep").textContent = `Avg: ${avgSleep} hrs`;
+      document.getElementById("kpiAvgSleep").textContent = `Avg: ${avgSleep}h`;
 
       let totalMonthPts = 0;
       let bestHabit = HABITS[0].name;
-      let bestHabitScore = -1;
-
+      let bestCount = -1;
       HABITS.forEach(h => {
-        let count = 0;
+        let c = 0;
         for (let d = 1; d <= 31; d++) {
-          if (state.logs[h.id][d] === 1) {
-            count++;
-            totalMonthPts++;
-          }
+          if (state.logs[h.id][d] === 1) { c++; totalMonthPts++; }
         }
-        if (count > bestHabitScore) {
-          bestHabitScore = count;
-          bestHabit = h.name;
-        }
+        if (c > bestCount) { bestCount = c; bestHabit = h.name; }
       });
 
       document.getElementById("kpiMonthPts").textContent = `${totalMonthPts} pts`;
-      document.getElementById("kpiTopHabit").textContent = `Top: ${bestHabit} (${bestHabitScore})`;
+      document.getElementById("kpiTopHabit").textContent = `Top: ${bestHabit} (${bestCount})`;
+
+      // Render Mini Sparkline Bar Strip on Home Dashboard (Days 1-15)
+      const miniBox = document.getElementById("miniOverviewChart");
+      if (miniBox) {
+        let svg = `<svg width="100%" height="72" viewBox="0 0 320 72" preserveAspectRatio="none">`;
+        let linePts = [];
+        let sleepPts = [];
+        for (let d = 1; d <= 15; d++) {
+          const x = 10 + (d - 1) * 21;
+          const p = getDayPoints(d);
+          const barH = (p / 12) * 46;
+          const y = 54 - barH;
+          const isSel = d === selectedDay;
+          svg += `<rect x="${x - 5}" y="${y}" width="10" height="${Math.max(barH, 2)}" rx="2" fill="${isSel ? '#10b981' : '#334155'}" class="cursor-pointer" onclick="selectDay(${d})" />`;
+          svg += `<text x="${x}" y="68" text-anchor="middle" fill="${isSel ? '#34d399' : '#64748b'}" font-size="8" font-weight="bold">${d}</text>`;
+          if (p > 0) linePts.push(`${x},${y}`);
+          if (state.sleep[d] !== undefined) {
+            const sy = 54 - (state.sleep[d] / 9) * 46;
+            sleepPts.push(`${x},${sy}`);
+          }
+        }
+        if (linePts.length > 1) {
+          svg += `<polyline fill="none" stroke="#10b981" stroke-width="1.8" points="${linePts.join(" ")}" />`;
+        }
+        if (sleepPts.length > 1) {
+          svg += `<polyline fill="none" stroke="#f43f5e" stroke-width="1.5" stroke-dasharray="2,2" points="${sleepPts.join(" ")}" />`;
+        }
+        svg += `</svg>`;
+        miniBox.innerHTML = svg;
+      }
     }
 
-    // Render Tab 1: Daily Logger
     function renderDailyTab() {
       document.getElementById("selectedDayBadge").textContent = `Day ${selectedDay}`;
       document.querySelectorAll(".dayNameSpan").forEach(el => el.textContent = `Day ${selectedDay}`);
 
-      // Day Strip
       const strip = document.getElementById("daySelectorStrip");
       strip.innerHTML = "";
       for (let d = 1; d <= 31; d++) {
         const pts = getDayPoints(d);
-        const isSelected = d === selectedDay;
+        const isSel = d === selectedDay;
         const btn = document.createElement("button");
         btn.onclick = () => selectDay(d);
         btn.className = `flex-shrink-0 w-11 py-1.5 rounded-lg border text-center transition ${
-          isSelected
+          isSel
             ? "bg-emerald-500 text-slate-950 border-emerald-400 font-extrabold shadow-md shadow-emerald-500/20"
             : pts > 0
-            ? "bg-slate-800/90 text-slate-200 border-slate-700"
+            ? "bg-slate-800 text-slate-200 border-slate-700"
             : "bg-slate-950 text-slate-500 border-slate-800"
         }`;
-        btn.innerHTML = `
-          <div class="text-[10px] opacity-80">D${d}</div>
-          <div class="text-xs font-bold">${pts}/12</div>
-        `;
+        btn.innerHTML = `<div class="text-[10px] opacity-80">D${d}</div><div class="text-xs font-bold">${pts}/12</div>`;
         strip.appendChild(btn);
       }
 
-      // Sleep Buttons
       const sVal = state.sleep[selectedDay];
       document.getElementById("currentSleepBadge").textContent = sVal !== undefined ? `${sVal} hrs` : "Not Logged";
       const sleepRow = document.getElementById("sleepButtonsRow");
@@ -448,7 +259,399 @@
         btn.onclick = () => setSleep(selectedDay, item.val);
         btn.className = `py-2 rounded-lg text-xs font-bold border transition active:scale-95 ${
           active
-            ? item.val === 0
-              ? "bg-rose-500 text-white border-rose-400"
-              : "bg-sky-500 text-slate-950 border-sky-400"
-            : "bg-slate-950 text-slate-300 border
+            ? item.val === 0 ? "bg-rose-500 text-white border-rose-400" : "bg-sky-500 text-slate-950 border-sky-400"
+            : "bg-slate-950 text-slate-300 border-slate-800"
+        }`;
+        btn.textContent = item.label;
+        sleepRow.appendChild(btn);
+      });
+
+      const pts = getDayPoints(selectedDay);
+      const pct = Math.round((pts / 12) * 100);
+      document.getElementById("dailyProgressText").textContent = `${pts}/12 pts (${pct}%)`;
+      document.getElementById("dailyProgressBar").style.width = `${pct}%`;
+
+      const list = document.getElementById("habitChecklistContainer");
+      list.innerHTML = "";
+      HABITS.forEach(h => {
+        const st = state.logs[h.id][selectedDay];
+        const row = document.createElement("div");
+        row.className = `flex items-center justify-between p-2.5 rounded-xl border transition ${
+          st === 1 ? "bg-emerald-950/35 border-emerald-500/40" : st === -1 ? "bg-rose-950/30 border-rose-500/35" : "bg-slate-950 border-slate-800"
+        }`;
+        row.innerHTML = `
+          <div class="flex items-center gap-2.5">
+            <span class="w-6 h-6 rounded-full bg-slate-800 text-slate-300 text-xs font-bold flex items-center justify-center">${h.id}</span>
+            <span class="text-sm font-medium ${st === 1 ? "text-emerald-300" : st === -1 ? "text-rose-300 line-through opacity-75" : "text-slate-200"}">${h.name}</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button onclick="setHabitStatus(${h.id}, ${selectedDay}, 1)" class="w-9 h-8 rounded-lg font-bold text-sm border transition active:scale-95 ${
+              st === 1 ? "bg-emerald-500 text-slate-950 border-emerald-400" : "bg-slate-900 text-slate-400 border-slate-700"
+            }">✓</button>
+            <button onclick="setHabitStatus(${h.id}, ${selectedDay}, -1)" class="w-9 h-8 rounded-lg font-bold text-sm border transition active:scale-95 ${
+              st === -1 ? "bg-rose-500 text-white border-rose-400" : "bg-slate-900 text-slate-400 border-slate-700"
+            }">✗</button>
+          </div>
+        `;
+        list.appendChild(row);
+      });
+    }
+
+    function renderMatrixTab() {
+      let headHTML = `<tr><th class="sticky-col px-2.5 py-2 text-left text-[11px] font-bold text-slate-300 border-r border-slate-800">Habit/Rules</th>`;
+      for (let d = 1; d <= 31; d++) {
+        headHTML += `<th onclick="selectDay(${d})" class="px-2 py-2 text-center cursor-pointer ${d === selectedDay ? "bg-emerald-500/25 text-emerald-300 font-extrabold" : ""}">${d}</th>`;
+      }
+      headHTML += `</tr>`;
+      document.getElementById("matrixThead").innerHTML = headHTML;
+
+      let bodyHTML = "";
+      HABITS.forEach(h => {
+        bodyHTML += `<tr><td class="sticky-col px-2.5 py-2 font-medium text-slate-200 border-r border-slate-800 whitespace-nowrap"><span class="text-slate-500 mr-1">${h.id}.</span>${h.name}</td>`;
+        for (let d = 1; d <= 31; d++) {
+          const v = state.logs[h.id][d];
+          const sym = v === 1 ? "✓" : v === -1 ? "✗" : "";
+          const cls = v === 1 ? "text-emerald-400 font-bold bg-emerald-500/15" : v === -1 ? "text-rose-400 font-bold bg-rose-500/15" : "text-slate-600";
+          bodyHTML += `<td onclick="cycleHabitCell(${h.id}, ${d})" class="w-8 h-8 text-center border-r border-slate-800/60 cursor-pointer ${cls}">${sym}</td>`;
+        }
+        bodyHTML += `</tr>`;
+      });
+      document.getElementById("matrixTbody").innerHTML = bodyHTML;
+
+      let footHTML = `<tr><td class="sticky-col px-2.5 py-2 text-emerald-400 border-r border-slate-800">Total Points</td>`;
+      for (let d = 1; d <= 31; d++) {
+        const pts = getDayPoints(d);
+        footHTML += `<td class="text-center py-2 border-r border-slate-800 text-slate-200">${pts > 0 ? pts : ""}</td>`;
+      }
+      footHTML += `</tr>`;
+      document.getElementById("matrixTfoot").innerHTML = footHTML;
+    }
+
+    function renderSleepTab() {
+      const colW = 24, leftPad = 48, topPad = 24, rowH = 28;
+      const width = leftPad + 31 * colW + 16;
+      const height = topPad + SLEEP_ROWS.length * rowH + 20;
+
+      const yForSleep = (val) => {
+        const idx = SLEEP_ROWS.findIndex(r => r.val === val);
+        return idx === -1 ? null : topPad + idx * rowH + rowH / 2;
+      };
+      const xForDay = (d) => leftPad + (d - 0.5) * colW;
+
+      let svg = `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">`;
+      SLEEP_ROWS.forEach((r, idx) => {
+        const y = topPad + idx * rowH + rowH / 2;
+        svg += `<line x1="${leftPad}" y1="${y}" x2="${width - 10}" y2="${y}" stroke="#1e293b" stroke-width="1" />`;
+        svg += `<text x="${leftPad - 6}" y="${y + 4}" text-anchor="end" fill="#94a3b8" font-size="10" font-weight="600">${r.label}</text>`;
+      });
+
+      for (let d = 1; d <= 31; d++) {
+        const x = xForDay(d);
+        svg += `<line x1="${x}" y1="${topPad}" x2="${x}" y2="${height - 16}" stroke="#1e293b" stroke-dasharray="2,2" stroke-width="1" />`;
+        svg += `<text x="${x}" y="${topPad - 8}" text-anchor="middle" fill="${d <= 13 ? '#e2e8f0' : '#64748b'}" font-size="9" font-weight="bold">${d}</text>`;
+      }
+
+      const plottedDays = Object.keys(state.sleep).map(Number).sort((a, b) => a - b);
+      for (let i = 0; i < plottedDays.length - 1; i++) {
+        const d1 = plottedDays[i], d2 = plottedDays[i + 1];
+        const y1 = yForSleep(state.sleep[d1]), y2 = yForSleep(state.sleep[d2]);
+        if (y1 !== null && y2 !== null) {
+          const strokeColor = d2 <= 4 ? "#f8fafc" : "#f43f5e";
+          svg += `<line x1="${xForDay(d1)}" y1="${y1}" x2="${xForDay(d2)}" y2="${y2}" stroke="${strokeColor}" stroke-width="2.5" stroke-linecap="round" />`;
+        }
+      }
+
+      for (let d = 1; d <= 31; d++) {
+        SLEEP_ROWS.forEach(r => {
+          const cx = xForDay(d), cy = yForSleep(r.val);
+          if (state.sleep[d] === r.val) {
+            const dotColor = d <= 4 ? "#f8fafc" : "#f43f5e";
+            svg += `<circle cx="${cx}" cy="${cy}" r="5" fill="${dotColor}" stroke="#0f172a" stroke-width="1.5" class="cursor-pointer" onclick="setSleep(${d}, ${r.val})" />`;
+          } else {
+            svg += `<circle cx="${cx}" cy="${cy}" r="7" fill="transparent" class="cursor-pointer" onclick="setSleep(${d}, ${r.val})" />`;
+          }
+        });
+      }
+      svg += `</svg>`;
+      document.getElementById("sleepSvgWrapper").innerHTML = svg;
+
+      let sh = `<tr><th class="sticky-col px-2.5 py-1.5 text-left border-r border-slate-800">Scale</th>`;
+      for (let d = 1; d <= 31; d++) sh += `<th class="px-2 py-1.5 text-center">${d}</th>`;
+      sh += `</tr>`;
+      document.getElementById("sleepGridHead").innerHTML = sh;
+
+      let sb = "";
+      SLEEP_ROWS.forEach(r => {
+        sb += `<tr><td class="sticky-col px-2.5 py-1.5 font-semibold text-slate-300 border-r border-slate-800">${r.label}</td>`;
+        for (let d = 1; d <= 31; d++) {
+          const active = state.sleep[d] === r.val;
+          const dot = active ? (d <= 4 ? "⚪" : "🔴") : "·";
+          sb += `<td onclick="setSleep(${d}, ${r.val})" class="w-8 h-7 text-center border-r border-slate-800/60 cursor-pointer ${active ? "bg-rose-500/15" : "text-slate-600"}">${dot}</td>`;
+        }
+        sb += `</tr>`;
+      });
+      document.getElementById("sleepGridBody").innerHTML = sb;
+    }
+
+    function renderEvalTab() {
+      const colW = 23, leftPad = 32, topPad = 18, chartH = 130;
+      const width = leftPad + 31 * colW + 12;
+      const height = topPad + chartH + 24;
+
+      let svg = `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">`;
+      [0, 3, 6, 9, 12].forEach(val => {
+        const y = topPad + chartH - (val / 12) * chartH;
+        svg += `<line x1="${leftPad}" y1="${y}" x2="${width - 8}" y2="${y}" stroke="#1e293b" stroke-width="1" />`;
+        svg += `<text x="${leftPad - 6}" y="${y + 3}" text-anchor="end" fill="#64748b" font-size="9">${val}</text>`;
+      });
+
+      let poly = [];
+      for (let d = 1; d <= 31; d++) {
+        const pts = getDayPoints(d);
+        const x = leftPad + (d - 0.5) * colW;
+        const barH = (pts / 12) * chartH;
+        const y = topPad + chartH - barH;
+        if (pts > 0) {
+          svg += `<rect x="${x - 6}" y="${y}" width="12" height="${barH}" rx="2" fill="#10b981" fill-opacity="0.35" />`;
+          poly.push(`${x},${y}`);
+        }
+        svg += `<text x="${x}" y="${height - 6}" text-anchor="middle" fill="#94a3b8" font-size="9">${d}</text>`;
+      }
+      if (poly.length > 1) {
+        svg += `<polyline fill="none" stroke="#34d399" stroke-width="2" points="${poly.join(" ")}" />`;
+      }
+      poly.forEach(pt => {
+        const [cx, cy] = pt.split(",");
+        svg += `<circle cx="${cx}" cy="${cy}" r="3.5" fill="#10b981" />`;
+      });
+      svg += `</svg>`;
+      document.getElementById("pointsChartSvg").innerHTML = svg;
+
+      const evalContainer = document.getElementById("habitEvalBars");
+      evalContainer.innerHTML = "";
+      const stats = HABITS.map(h => {
+        let done = 0, missed = 0;
+        for (let d = 1; d <= 31; d++) {
+          if (state.logs[h.id][d] === 1) done++;
+          if (state.logs[h.id][d] === -1) missed++;
+        }
+        return { ...h, done, missed, pct: Math.round((done / 31) * 100) };
+      }).sort((a, b) => b.done - a.done);
+
+      stats.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "space-y-1";
+        div.innerHTML = `
+          <div class="flex justify-between text-xs">
+            <span class="font-medium text-slate-200">${item.id}. ${item.name}</span>
+            <span class="text-slate-400"><strong class="text-emerald-400">${item.done} ✓</strong> · <span class="text-rose-400">${item.missed} ✗</span> (${item.pct}% of month)</span>
+          </div>
+          <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+            <div class="h-full bg-emerald-500 rounded-full" style="width: ${Math.max(item.pct, 4)}%"></div>
+          </div>
+        `;
+        evalContainer.appendChild(div);
+      });
+    }
+
+    function renderAll() {
+      renderKPIsAndMiniCharts();
+      renderDailyTab();
+      renderMatrixTab();
+      renderSleepTab();
+      renderEvalTab();
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadState();
+      const noteEl = document.getElementById("monthlyNoteInput");
+      if (noteEl) {
+        noteEl.value = state.note || "";
+        noteEl.addEventListener("input", (e) => {
+          state.note = e.target.value;
+          try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (err) {}
+        });
+      }
+      renderAll();
+    });
+  </script>
+</head>
+<body class="min-h-screen pb-24 select-none">
+
+  <!-- TOP HEADER -->
+  <header class="sticky top-0 z-30 glass-nav border-b border-slate-800/80 px-4 py-3">
+    <div class="max-w-md mx-auto flex items-center justify-between">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-400 rounded-full border border-emerald-500/30">Oct 2026</span>
+          <span class="text-xs text-slate-400">31 Day Dashboard</span>
+        </div>
+        <h1 class="text-base font-bold tracking-tight text-white mt-0.5">Getting 1% Better Each Day</h1>
+      </div>
+      <button onclick="resetToPaperSheet()" class="text-[11px] font-medium px-2.5 py-1.5 rounded-lg bg-slate-800 text-slate-300 border border-slate-700 active:scale-95 transition">
+        Reset Data
+      </button>
+    </div>
+  </header>
+
+  <main class="max-w-md mx-auto px-3 pt-3 space-y-3">
+
+    <!-- KPI CARDS WITH RING GAUGE -->
+    <section class="grid grid-cols-3 gap-2">
+      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-2.5 flex items-center justify-between">
+        <div>
+          <p class="text-[9px] uppercase tracking-wider text-slate-400">Score</p>
+          <p id="kpiDayScore" class="text-base font-extrabold text-emerald-400 mt-0.5">9 / 12</p>
+          <p id="kpiDayLabel" class="text-[9px] text-slate-500">Day 2 (75%)</p>
+        </div>
+        <svg class="w-10 h-10 -rotate-90" viewBox="0 0 44 44">
+          <circle cx="22" cy="22" r="18" stroke="#1e293b" stroke-width="4" fill="none" />
+          <circle id="kpiRingCircle" cx="22" cy="22" r="18" stroke="#10b981" stroke-width="4" stroke-linecap="round" fill="none" />
+        </svg>
+      </div>
+      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-2.5 text-center">
+        <p class="text-[9px] uppercase tracking-wider text-slate-400">Day Sleep</p>
+        <p id="kpiDaySleep" class="text-lg font-extrabold text-sky-400 mt-0.5">7 hrs</p>
+        <p id="kpiAvgSleep" class="text-[10px] text-slate-500">Avg: 6.5h</p>
+      </div>
+      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-2.5 text-center">
+        <p class="text-[9px] uppercase tracking-wider text-slate-400">Month Total</p>
+        <p id="kpiMonthPts" class="text-lg font-extrabold text-amber-400 mt-0.5">51 pts</p>
+        <p id="kpiTopHabit" class="text-[10px] text-slate-500 truncate">Top: music</p>
+      </div>
+    </section>
+
+    <!-- ALWAYS-VISIBLE LIVE SPARKLINE CHART (SCORE BARS + SLEEP CURVE) -->
+    <section class="bg-slate-900/90 border border-slate-800 rounded-xl p-2.5">
+      <div class="flex items-center justify-between mb-1">
+        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-300">📊 Live Score & Sleep Trend (Tap Any Bar)</span>
+        <div class="flex items-center gap-2 text-[10px]">
+          <span class="text-emerald-400">● Pts</span>
+          <span class="text-rose-400">--- Sleep</span>
+        </div>
+      </div>
+      <div id="miniOverviewChart" class="w-full"></div>
+    </section>
+
+    <!-- TAB 1: DAILY LOG -->
+    <section id="tab-daily" class="space-y-3">
+      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-2.5">
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="text-xs font-semibold text-slate-300">Select Day (Oct 1 – 31)</span>
+          <span id="selectedDayBadge" class="text-xs font-bold text-emerald-400">Day 2</span>
+        </div>
+        <div id="daySelectorStrip" class="flex gap-1.5 overflow-x-auto no-scrollbar py-1"></div>
+      </div>
+
+      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3">
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-300">💤 Sleep Hours (Paper Scale)</h2>
+            <p class="text-[11px] text-slate-400">Tap to log sleep for <span class="dayNameSpan font-semibold text-white">Day 2</span></p>
+          </div>
+          <span id="currentSleepBadge" class="text-xs font-bold px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-500/30">7 hrs</span>
+        </div>
+        <div id="sleepButtonsRow" class="grid grid-cols-6 gap-1.5"></div>
+      </div>
+
+      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3">
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-300">📋 Habits / Rules (12)</h2>
+            <p class="text-[11px] text-slate-400">Tap <span class="text-emerald-400 font-bold">✓</span> (Done) or <span class="text-rose-400 font-bold">✗</span> (Missed)</p>
+          </div>
+          <span id="dailyProgressText" class="text-xs font-bold text-emerald-400">9/12 pts (75%)</span>
+        </div>
+        <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden mb-3">
+          <div id="dailyProgressBar" class="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-300" style="width: 75%"></div>
+        </div>
+        <div id="habitChecklistContainer" class="space-y-2"></div>
+      </div>
+
+      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3">
+        <label for="monthlyNoteInput" class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">📝 Sheet Note</label>
+        <textarea id="monthlyNoteInput" rows="2" placeholder="Add notes for Oct 2026..." class="w-full rounded-lg bg-slate-950 border border-slate-800 p-2 text-xs text-slate-200 focus:outline-none focus:border-emerald-500"></textarea>
+      </div>
+    </section>
+
+    <!-- TAB 2: 31-DAY MATRIX -->
+    <section id="tab-matrix" class="hidden space-y-3">
+      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-white">🗓️ 31-Day Paper Sheet Grid</h2>
+        <p class="text-[11px] text-slate-400 mb-2">Swipe sideways • Tap any cell to cycle <span class="text-emerald-400 font-bold">✓</span> → <span class="text-rose-400 font-bold">✗</span> → blank</p>
+        <div class="overflow-x-auto border border-slate-800 rounded-lg">
+          <table class="text-xs border-collapse w-max">
+            <thead id="matrixThead" class="bg-slate-950 text-slate-400"></thead>
+            <tbody id="matrixTbody" class="divide-y divide-slate-800/80"></tbody>
+            <tfoot id="matrixTfoot" class="bg-slate-950 font-bold border-t-2 border-slate-700"></tfoot>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: SLEEP CHART -->
+    <section id="tab-sleep" class="hidden space-y-3">
+      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-white">📈 Sleep Connected Line Graph</h2>
+        <p class="text-[11px] text-slate-400 mb-2">Matches your sheet scale (<span class="text-rose-400 font-semibold">0 hr</span> at top, <span class="text-sky-400 font-semibold">9 hrs → 5 hrs</span>)</p>
+        <div class="overflow-x-auto border border-slate-800 rounded-lg bg-slate-950 p-2">
+          <div id="sleepSvgWrapper" class="min-w-[820px]"></div>
+        </div>
+        <p class="text-[11px] text-slate-400 mt-2">💡 <strong>Tip:</strong> Tap any circle in the grid below to update that day's sleep hours and redraw the curve immediately.</p>
+      </div>
+
+      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Tap Grid to Plot Sleep Dot (Days 1–31)</h3>
+        <div class="overflow-x-auto border border-slate-800 rounded-lg">
+          <table class="text-xs border-collapse w-max">
+            <thead id="sleepGridHead" class="bg-slate-950 text-slate-400"></thead>
+            <tbody id="sleepGridBody" class="divide-y divide-slate-800/80"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: EVALUATION CHARTS -->
+    <section id="tab-eval" class="hidden space-y-3">
+      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-white mb-1">📊 Daily Total Points (Out of 12)</h2>
+        <p class="text-[11px] text-slate-400 mb-2">Visual evaluation of your Total Points row across all 31 days</p>
+        <div class="overflow-x-auto border border-slate-800 rounded-lg bg-slate-950 p-2">
+          <div id="pointsChartSvg" class="min-w-[780px]"></div>
+        </div>
+      </div>
+
+      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3">
+        <div class="flex items-center justify-between mb-2">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-white">🏆 Habit Consistency Breakdown</h2>
+          <span class="text-[11px] text-slate-400">Checkmarks vs Missed</span>
+        </div>
+        <div id="habitEvalBars" class="space-y-2.5"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- BOTTOM NAVIGATION -->
+  <nav class="fixed bottom-0 left-0 right-0 z-40 glass-nav border-t border-slate-800">
+    <div class="max-w-md mx-auto grid grid-cols-4 py-1.5 px-2">
+      <button onclick="switchTab('daily')" id="nav-daily" class="flex flex-col items-center py-1 text-emerald-400 font-bold">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <span class="text-[10px] mt-0.5">Daily Log</span>
+      </button>
+      <button onclick="switchTab('matrix')" id="nav-matrix" class="flex flex-col items-center py-1 text-slate-400">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+        <span class="text-[10px] mt-0.5">31-Day Grid</span>
+      </button>
+      <button onclick="switchTab('sleep')" id="nav-sleep" class="flex flex-col items-center py-1 text-slate-400">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+        <span class="text-[10px] mt-0.5">Sleep Chart</span>
+      </button>
+      <button onclick="switchTab('eval')" id="nav-eval" class="flex flex-col items-center py-1 text-slate-400">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+        <span class="text-[10px] mt-0.5">Evaluation</span>
+      </button>
+    </div>
+  </nav>
+</body>
+</html>
