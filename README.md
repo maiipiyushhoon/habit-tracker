@@ -6,7 +6,7 @@ It's a habit tracker for daily habits
 # 🎯 Getting 1% Better Each Day
 ### Oct 2026 — 31-Day Interactive Habit & Sleep Dashboard
 
-[![Live Demo](https://img.shields.io/badge/🚀_Live_App-GitHub_Pages-10b981?style=for-the-badge)](https://maiipiyushhoon.github.io/habit-tracker/)
+[![Live Demo](https://img.shields.io/badge/🚀_Live_App-GitHub_Pages-10b981?style=for-the-badge)]
 [![Mobile Optimized](https://img.shields.io/badge/📱_UI-Mobile_First_PWA-0ea5e9?style=for-the-badge)](#)
 [![Zero Dependencies](https://img.shields.io/badge/⚡_Stack-Vanilla_JS_%2B_Tailwind-f59e0b?style=for-the-badge)](#)
 [![Notion Ready](https://img.shields.io/badge/📓_Notion-Embed_Ready-ffffff?style=for-the-badge&logo=notion&logoColor=black)](#)
